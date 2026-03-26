@@ -1,11 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Phone, MessageCircle, Instagram, Droplet, Wrench, ShieldCheck, Clock, CheckCircle, MapPin, Mail, Menu, X, ArrowRight, Leaf, Droplets, Camera, Truck, DoorClosed } from 'lucide-react';
 
 export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isFabMenuOpen, setIsFabMenuOpen] = useState(false);
+  const [isContactMenuOpen, setIsContactMenuOpen] = useState(false);
   const [currentBanner, setCurrentBanner] = useState(0);
+
+  const contactMenuRef = useRef<HTMLDivElement>(null);
+  const fabMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (contactMenuRef.current && !contactMenuRef.current.contains(event.target as Node)) {
+        setIsContactMenuOpen(false);
+      }
+      if (fabMenuRef.current && !fabMenuRef.current.contains(event.target as Node)) {
+        setIsFabMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const carouselBanners = [
     "https://i.postimg.cc/5N2yttLv/1.png",
@@ -225,6 +245,11 @@ export default function App() {
         
         <div className="container mx-auto px-4 md:px-6 relative z-10">
           <div className="text-center mb-16 relative">
+            <div className="inline-flex items-center gap-2 bg-green-100 border border-green-200 text-green-800 px-4 py-1.5 rounded-full text-sm font-medium mb-6 shadow-sm">
+              <ShieldCheck className="w-4 h-4 text-green-600" />
+              Empresa Licenciada FEPAM
+            </div>
+            <br />
             <div className="inline-block mb-4 relative group cursor-default">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-cyan-400 blur-xl rounded-full opacity-40 group-hover:opacity-70 transition-opacity duration-500"></div>
               <h3 className="relative bg-white/80 backdrop-blur-sm px-6 py-2 rounded-full border border-blue-100 shadow-sm text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-cyan-600 font-display font-extrabold tracking-widest uppercase text-sm">
@@ -423,6 +448,83 @@ export default function App() {
         
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1548883354-7622d03aca27?auto=format&fit=crop&q=80&w=2000')] opacity-15 bg-cover bg-center mix-blend-overlay"></div>
         <div className="container mx-auto px-4 md:px-6 text-center relative z-10">
+          {/* Seção de Contatos */}
+          <div className="mb-20 max-w-5xl mx-auto">
+            <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-visible">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-cyan-400/30 to-blue-500/30 rounded-full blur-3xl -z-10"></div>
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-green-400/30 to-emerald-500/30 rounded-full blur-3xl -z-10"></div>
+              
+              <h3 className="text-3xl md:text-4xl font-display font-bold text-white mb-4 drop-shadow-md">Fale com um Especialista</h3>
+              <p className="text-blue-100 mb-10 max-w-2xl mx-auto text-lg">Escolha o melhor canal para falar com nossa equipe. Estamos prontos para te atender!</p>
+              
+              <div className="flex flex-col md:flex-row items-center justify-center gap-4 w-full">
+                {/* WhatsApp Button with Menu */}
+                <div className="relative w-full md:w-auto" ref={contactMenuRef}>
+                  <button 
+                    onClick={() => setIsContactMenuOpen(!isContactMenuOpen)}
+                    className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-full font-display font-bold text-lg transition-all shadow-xl shadow-green-500/30 hover:shadow-green-500/50 hover:-translate-y-1 w-full md:w-auto"
+                  >
+                    <MessageCircle className="w-6 h-6" />
+                    WhatsApp
+                  </button>
+                  
+                  {/* Dropdown Menu */}
+                  <div className={`absolute bottom-full mb-4 left-1/2 -translate-x-1/2 w-72 bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden z-50 flex flex-col transition-all duration-300 origin-bottom ${isContactMenuOpen ? 'scale-100 opacity-100' : 'scale-0 opacity-0 pointer-events-none'}`}>
+                    <a
+                      href={whatsappLink1}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-4 px-5 py-4 hover:bg-slate-50 transition-colors border-b border-slate-100 text-left group"
+                    >
+                      <div className="bg-green-100 text-green-600 p-3 rounded-full group-hover:scale-110 transition-transform">
+                        <MessageCircle className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <span className="block font-bold text-slate-800 text-base">WhatsApp Comercial</span>
+                        <span className="block text-sm text-slate-500">(54) 98130-3611</span>
+                      </div>
+                    </a>
+                    <a
+                      href={whatsappLink2}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-4 px-5 py-4 hover:bg-slate-50 transition-colors text-left group"
+                    >
+                      <div className="bg-red-100 text-red-600 p-3 rounded-full group-hover:scale-110 transition-transform">
+                        <Phone className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <span className="block font-bold text-slate-800 text-base">Plantão 24h</span>
+                        <span className="block text-sm text-slate-500">(54) 98126-7121</span>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                
+                {/* Instagram Button */}
+                <a
+                  href={instagramLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-4 rounded-full font-display font-bold text-lg transition-all shadow-xl shadow-pink-500/30 hover:shadow-pink-500/50 hover:-translate-y-1 w-full md:w-auto"
+                >
+                  <Instagram className="w-6 h-6" />
+                  Instagram
+                </a>
+                
+                {/* Email Button */}
+                <a
+                  href="mailto:contato@dborgesdesentupidora.com.br"
+                  className="flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm border-2 border-white/20 text-white px-8 py-4 rounded-full font-display font-bold text-lg transition-all hover:-translate-y-1 w-full md:w-auto"
+                >
+                  <Mail className="w-6 h-6" />
+                  <span className="hidden sm:inline">contato@dborgesdesentupidora.com.br</span>
+                  <span className="sm:hidden">E-mail</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
           <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-6">Precisa de ajuda agora mesmo?</h2>
           <p className="text-blue-100 text-lg mb-8 max-w-2xl mx-auto">
             Nossa equipe está de prontidão para resolver seu problema de forma rápida, limpa e eficiente.
@@ -532,7 +634,7 @@ export default function App() {
       </footer>
 
       {/* Floating WhatsApp Button */}
-      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-4">
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-4" ref={fabMenuRef}>
         {/* Menu Options */}
         <div className={`flex flex-col gap-3 transition-all duration-300 origin-bottom-right ${isFabMenuOpen ? 'scale-100 opacity-100' : 'scale-0 opacity-0 pointer-events-none'}`}>
           <a
